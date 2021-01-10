@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "";
+}
+@inject UserManager<UserIdentity> UserManager
+@addTagHelper *,PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<Review>
+
+
+<section class="hero-wrap hero-wrap-2" style="background-image: url(/images/bg_2.jpg);" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-center">
+            <div class="col-md-9 ftco-animate text-center mb-4">
+                <h1 class="mb-2 bread">@ViewData["Username"] Adlı kullanıcının Profili</h1>
+            </div>
+        </div>
+    </div>
+</section>
+@*Blogs lists and pages*@
+<section class="ftco-section ftco-wrap-about">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7 d-flex">
+                <div class="img img-2 ml-md-2" style="background-image: url(@ViewData["profilephoto"]);"></div>
+            </div>
+            <div class="col-md-5 wrap-about pt-5 pt-md-5 pb-md-3 ftco-animate">
+                <div class="heading-section mb-4 my-5 my-md-0">
+                    <span class="subheading">@ViewData["Username"]</span><br><br>
+                      <h2 class="mb-4">'in paylaştığı makaleler</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                var x = await UserManager.FindByIdAsync(item.UserID);
+                ViewData["Username"] = x.UserName;
+                <div class="col-md-4 ftco-animate">
+                    <div class="blog-entry">
+                        <a href="/Blogs/blog/@item.ReviewID" class="block-20" style="background-image: url(@item.BannerImage);"></a>
+                        <div class="text pt-3 pb-4 px-4">
+                            <div class="meta">
+                                @{
+                                    int starCount = Convert.ToInt16(item.Star);
+                                    for (int i = 1; i <= starCount; i++)
+                                    {
+                                        <span class="golden fas fa-star"></span>
+                                    }
+                                    for (int i = starCount + 1; i <= 5; i++)
+                                    {
+                                        <span class="golden far fa-star"></span>
+                                    }
+                                }<br />
+                                <div>@item.PublishDate</div>
+                                <div>@ViewData["Username"]</div>
+                            </div>
+                            <h3 class="heading"><a href="/Blogs/blog/@item.ReviewID">@item.Header</a></h3>
+                            <div>@item.ShortCast</div>
+                            <p class="clearfix">
+                                <a href="/Blogs/blog/@item.ReviewID" class="float-left read"><u>Makaleyi oku</u></a>
+                            </p>
+                        </div>
+                    </div>
+                    @{
+                        ViewData["Title"] = ViewData["Username"];
+                        ViewData["Header"] = ViewData["Username"] + " adlı kullanıcının makaleleri";                       
+                    }
+                </div>
+            }
+        </div>
+        <div class="row no-gutters my-5">
+            <div class="col text-center">
+                @if (ViewData["Model"] != "Bu Kullanıcı henüz bir şey paylaşmamış")
+                {
+                    <pager list="@Model" asp-controller="Blogs" asp-action="Index" />
+                }
+            </div>
+        </div>
+    </div>
+
+</section>

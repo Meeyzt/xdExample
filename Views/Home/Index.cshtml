@@ -1,0 +1,212 @@
+﻿@{
+    ViewData["Title"] = "Anasayfa";
+    int forcount = 0;
+}
+@model IEnumerable<Values>
+
+@inject SignInManager<UserIdentity> SignInManager
+@inject UserManager<UserIdentity> UserManager
+
+<section class="home-slider owl-carousel js-fullheight">
+        <!--foreach 4 count-->
+    @foreach (var item in Model)
+    {
+        if (forcount < 4)
+        {
+            forcount += 1;
+        <div class="slider-item js-fullheight" style="background-image: url(@item.BannerImage);">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row slider-text js-fullheight justify-content-center align-items-center" data-scrollax-parent="true">
+                </div>
+            </div>
+        </div>
+        }
+        else
+        {
+            forcount = 0;
+            break;
+        }
+        if (Model.Count() <= 3)
+        {
+            if (forcount == Model.Count())
+            {
+                forcount = 0;
+                break;
+            }
+        }
+    }
+</section>
+
+<section class="ftco-section ftco-no-pt ftco-no-pb">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="featured">
+                    <div class="row">
+
+                        <!--foreach 4 count-->
+                        @{forcount = 0;
+                            foreach (var item in Model)
+                            {
+                                if (forcount < 4)
+                                {
+                                    forcount += 1;
+
+                            <div class="col-md-3">
+                                <div class="featured-menus ftco-animate">
+                                    <a href="Blogs/blog/@item.ReviewID">
+                                        <div class="menu-img img" style="background-image: url(@item.BannerImage);"></div>
+                                        <div class="text text-center">
+                                            <h3>
+                                                @{
+                                                    string stringed;
+                                                    var strings = item.ShortCast.Split(" ");
+                                                    if (strings.Count() >= 4)
+                                                    {
+                                                        stringed = strings[0] + " " + strings[1] + " " + strings[2] + " " + strings[3] + "...";
+                                                    } else if (strings.Count() ==3)
+                                                    {
+                                                        stringed = strings[0] + " " + strings[1] + " " + strings[2] + "...";
+                                                    } else if (strings.Count() ==2)
+                                                    {
+                                                        stringed = strings[0] + " " + strings[1] + "...";
+                                                    } else
+                                                    {
+                                                        stringed = strings[0] + "...";
+                                                    }
+                                                }
+                                                @stringed
+                                                @{ 
+                                                    stringed = "";
+                                                    strings=null;
+                                                }
+                                            </h3>
+                                            <p>
+                                                <span>
+                                                    @{
+                                                        int starCount = Convert.ToInt32(item.Star);
+                                                        for (int i = 1; i <= starCount; i++)
+                                                        {
+                                                            <span class="fas fa-star"></span>
+                                                        }
+                                                        for (int i = starCount + 1; i <= 5; i++)
+                                                        {
+                                                            <span class="far fa-star"></span>
+                                                        }
+                                                    }
+                                                </span> <span>@item.Price ₺</span>
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            forcount = 0;
+                                                            
+                                                            break;
+                                                        }
+
+                                                    } }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row no-gutters justify-content-center mb-5 pb-2">
+            <div class="col-md-12 text-center heading-section ftco-animate">
+                <span class="subheading">Son eklenen</span>
+                <h2 class="mb-4">Makaleler</h2>
+            </div>
+        </div>
+        <div class="row no-gutters d-flex align-items-stretch">
+            <!--Foreach-->
+            @foreach (var item in Model)
+            {
+
+            <div class="col-md-12 col-lg-6 d-flex align-self-stretch">
+                <div class="menus d-sm-flex ftco-animate align-items-stretch">
+                    <div class="menu-img img @item.classLibrary" style="background-image: url(@item.BannerImage);"></div>
+                    <div class="text d-flex align-items-center">
+                        <div>
+                            <div class="d-flex">
+                                <div class="one-half">
+                                    <h3>
+                                        @{
+                                            string Headered;
+                                            var Headers = item.Header.Split(" ");
+                                            if (Headers.Count() >= 4)
+                                            {
+                                                Headered = Headers[0] + " " + Headers[1] + " " + Headers[2] + " " + Headers[3] + "...";
+                                            }
+                                            else if (Headers.Count() == 3)
+                                            {
+                                                Headered = Headers[0] + " " + Headers[1] + " " + Headers[2] + "...";
+                                            }
+                                            else if (Headers.Count() == 2)
+                                            {
+                                                Headered = Headers[0] + " " + Headers[1] + "...";
+                                            }
+                                            else
+                                            {
+                                                Headered = Headers[0] + "...";
+                                            }
+                                    }
+                                    @Headered
+                                </h3>
+                                @{
+                                    int starCount = Convert.ToInt32(item.Star);
+                                    for (int i = 1; i <= starCount; i++)
+                                    {
+                                        <span class="golden fas fa-star"></span>
+                                    }
+                                    for (int i = starCount + 1; i <= 5; i++)
+                                    {
+                                        <span class="golden far fa-star"></span>
+                                    }
+                                }
+                                </div>
+                                <div class="one-forth">
+                                    <span class="price">@item.Price ₺</span>
+                                </div>
+                            </div>
+                            <p>@{ 
+                                string stringed;
+                                var strings = item.ShortCast.Split(" ");
+                                if (strings.Count() >= 4)
+                                {
+                                    stringed = strings[0] + " " + strings[1] + " " + strings[2] + " " + strings[3] + "...";
+                                }
+                                else if (strings.Count() ==3)
+                                {
+                                    stringed = strings[0] + " " + strings[1] + " " + strings[2] + "...";
+                                }
+                                else if (strings.Count() ==2 )
+                                {
+                                    stringed = strings[0] + " " + strings[1] + "...";
+                                }
+                                else
+                                {
+                                    stringed = strings[0] + "...";
+                                }
+                            }@stringed
+                            @{ 
+                                strings = null;
+                                stringed = "";
+                            }
+                            </p>
+                            <p><a href="/Blogs/blog/@item.ReviewID" class="btn btn-primary">Makaleyi Oku</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</section>

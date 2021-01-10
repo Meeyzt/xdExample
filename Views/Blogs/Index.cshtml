@@ -1,0 +1,119 @@
+﻿@{
+    ViewData["Title"] = "Makaleler";
+}
+@inject UserManager<UserIdentity> UserManager
+@addTagHelper *,PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<Review>
+
+
+
+<section class="hero-wrap hero-wrap-2" style="background-image: url(/images/bg_2.jpg);" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-center">
+            <div class="col-md-9 ftco-animate text-center mb-4">
+                <h1 class="mb-2 bread">Makaleler</h1>
+            </div>
+        </div>
+    </div>
+</section>
+@*Blogs lists and pages*@
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row">
+            @ViewData["Model"]
+            @foreach (var item in Model)
+            {
+                var x = await UserManager.FindByIdAsync(item.UserID);
+                ViewData["Username"] = x.UserName;
+                <div class="col-md-4 ftco-animate">
+                    <div class="blog-entry">
+                        <a href="/Blogs/blog/@item.ReviewID" class="block-20" style="background-image: url(@item.BannerImage);"></a>
+                        <div class="text pt-3 pb-4 px-4">
+                            <div class="meta">
+                                @{
+                                    int starCount = Convert.ToInt32(item.Star);
+                                    for (int i = 1; i <= starCount; i++)
+                                    {
+                                        <span class="golden fas fa-star"></span>
+                                    }
+                                    for (int i = starCount + 1; i <= 5; i++)
+                                    {
+                                        <span class="golden far fa-star"></span>
+                                    }
+                                }<br />
+                                <div>@item.PublishDate</div>
+                                <div><a href="/user/profile/@item.UserID" style="color:dimgray;">@ViewData["Username"]</a></div>
+                            </div>
+                            <h6>@item.RestaurantName</h6>
+                            <h3 class="heading">
+                                <a href="/Blogs/blog/@item.ReviewID">
+                                    @{
+                                        string Headered;
+                                        var Headers = item.Header.Split(" ");
+                                        if (Headers.Count() >= 4)
+                                        {
+                                            Headered = Headers[0] + " " + Headers[1] + " " + Headers[2] + " " + Headers[3] + "...";
+                                        }
+                                        else if (Headers.Count() == 3)
+                                        {
+                                            Headered = Headers[0] + " " + Headers[1] + " " + Headers[2] + "...";
+                                        }
+                                        else if (Headers.Count() == 2)
+                                        {
+                                            Headered = Headers[0] + " " + Headers[1] + "...";
+                                        }
+                                        else
+                                        {
+                                            Headered = Headers[0] + "...";
+                                        }
+                                    }
+                                    @Headered
+                                </a>
+                            </h3>
+                            <div>
+                                @{
+                                    string stringed;
+                                    var strings = item.ShortCast.Split(" ");
+                                    if (strings.Count() >= 4)
+                                    {
+                                        stringed = strings[0] + " " + strings[1] + " " + strings[2] + " " + strings[3] + "...";
+                                    }
+                                    else if (strings.Count() == 3)
+                                    {
+                                        stringed = strings[0] + " " + strings[1] + " " + strings[2] + "...";
+                                    }
+                                    else if (strings.Count() == 2)
+                                    {
+                                        stringed = strings[0] + " " + strings[1] + "...";
+                                    }
+                                    else
+                                    {
+                                        stringed = strings[0] + "...";
+                                    }
+                                }
+                                @stringed
+                                @{
+                                    stringed = "";
+                                    strings = null;
+                                }
+                            </div>
+                            <p class="clearfix">
+                                <a href="/Blogs/blog/@item.ReviewID" class="float-left read" style="float:right;"><u>Makaleyi oku</u></a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="row no-gutters my-5">
+            <div class="col center">
+                @if (ViewData["Model"] != "Buralarda Birşey yok")
+                {
+                    <pager list="@Model" asp-controller="Blogs" asp-action="Index" />
+                }
+            </div>
+        </div>
+    </div>
+</section>
